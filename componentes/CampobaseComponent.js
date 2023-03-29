@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import Calendario from './CalendarioComponent'; import { EXCURSIONES } from '../comun/excursiones';
+import Calendario from './CalendarioComponent'; 
+import { EXCURSIONES } from '../comun/excursiones';
 
 class Campobase extends Component { constructor(props) {
     super(props);
