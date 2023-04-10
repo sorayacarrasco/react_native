@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import Calendario from './CalendarioComponent'; 
-import { EXCURSIONES } from '../comun/excursiones';
+import {EXCURSIONES} from '../común/excursiones';
 
-class Campobase extends Component { constructor(props) {
-    super(props);
-    this.state = {
-excursiones: EXCURSIONES };
+class Campobase extends Component { 
+    constructor(props) {
+        super(props);
+        this.state = {
+            excursiones: EXCURSIONES 
+        };
 } render() {
 return (
 <Calendario excursiones={this.state.excursiones} />

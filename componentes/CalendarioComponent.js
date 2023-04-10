@@ -7,7 +7,7 @@ function Calendario(props) {
     const renderCalendarioItem = ({item, index}) => {
         return (
             <ListItem key={index} bottomDivider>
-                <Avatar source={require('./imagenes/40Años.png')} />
+                <Avatar source={require('./imagenes/40Anos.png')} />
                 <ListItem.Content>
                     <ListItem.Title>{item.nombre}</ListItem.Title>
                     <ListItem.Subtitle>{item.descripcion}</ListItem.Subtitle>
@@ -16,13 +16,6 @@ function Calendario(props) {
         );
     };
 
-
-
-
-
-
-
-    
     return (
         <SafeAreaView>
             <FlatList 
@@ -33,5 +26,4 @@ function Calendario(props) {
         </SafeAreaView>
     );
 }
-
 export default Calendario;
