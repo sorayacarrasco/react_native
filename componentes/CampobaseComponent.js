@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import Constants from 'expo-constants';
 import Calendario from './CalendarioComponent';
 import DetalleExcursion from './DetalleExcursionComponent';
+import Contacto from './Contacto';
+import QuienesSomos from './QuienesSomos';
 import { View } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -38,7 +40,11 @@ function DrawerNavegador() {
             },
         }} >
             <Drawer.Screen name="Home" component={HomeNavegador} />
+            <Drawer.Screen name="Quienes somos" component={QuienesSomosNavegador} />
             <Drawer.Screen name="Calendario" component={CalendarioNavegador} />
+            <Drawer.Screen name="Contacto " component={ContactoNavegador} />
+
+
         </Drawer.Navigator>
     );
 }
@@ -67,6 +73,50 @@ function CalendarioNavegador() {
             component={DetalleExcursion}
             options={{
                 title: 'Detalle Excursión',
+            }}
+        />
+    </Stack.Navigator>
+  );
+}
+
+function ContactoNavegador() {
+  return (
+    <Stack.Navigator
+        initialRouteName="Contacto"
+        headerMode="float"
+        screenOptions={{
+            headerTintColor: '#fff',
+            headerStyle: { backgroundColor: '#015afc' },
+            headerTitleStyle: { color: '#fff' },
+        }}
+    >
+        <Stack.Screen
+            name="contacto"
+            component={Contacto}
+            options={{
+                title: 'Contacto',
+            }}
+        />
+    </Stack.Navigator>
+  );
+}
+
+function QuienesSomosNavegador() {
+  return (
+    <Stack.Navigator
+        initialRouteName="QuienesSomos"
+        headerMode="float"
+        screenOptions={{
+            headerTintColor: '#fff',
+            headerStyle: { backgroundColor: '#015afc' },
+            headerTitleStyle: { color: '#fff' },
+        }}
+    >
+        <Stack.Screen
+            name="QuienesSomos"
+            component={QuienesSomos}
+            options={{
+                title: 'Quiénes somos',
             }}
         />
     </Stack.Navigator>
