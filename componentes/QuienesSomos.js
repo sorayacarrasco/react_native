@@ -1,19 +1,31 @@
 import React, { Component } from 'react';
 import Historia from './Historia';
-import { ACTIVIDADES } from '../comun/actividades';
 import { ScrollView, FlatList } from 'react-native';
 import { ListItem, Avatar } from '@rneui/themed';
 import { Card } from '@rneui/themed';
-
-
+import { baseUrl } from '../comun/comun';
+import axios from 'axios';
 
 
 class QuienesSomos extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            actividades: ACTIVIDADES
+            actividades: ''
         };
+
+        const request = axios.get(baseUrl+'actividades');
+
+        axios.all([request])
+            .then(axios.spread((response) => {
+                this.setState({
+                    actividades: response.data,
+                });
+            }))
+            .catch(error => {
+                console.log(error);
+            });
+
     }
 
     render(){
@@ -22,7 +34,7 @@ class QuienesSomos extends Component {
                 <ListItem
                 key={index}
                 bottomDivider>
-                    <Avatar source={require('./imagenes/40Años.png')} />
+                    <Avatar source={{ uri: baseUrl + item.imagen }} />
                     <ListItem.Content>
                         <ListItem.Title>{item.nombre}</ListItem.Title>
                         <ListItem.Subtitle>{item.descripcion}</ListItem.Subtitle>

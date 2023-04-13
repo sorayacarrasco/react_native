@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import { Text, View } from 'react-native';
 import { Card, Icon } from '@rneui/themed';
-import { EXCURSIONES } from '../comun/excursiones';
-import { COMENTARIOS } from '../comun/comentarios';
 import { ListItem } from 'react-native-elements';
 import { ScrollView, FlatList } from 'react-native';
-
+import axios from 'axios';
+import { baseUrl } from '../comun/comun';
 
 function RenderExcursion(props) {
 
@@ -16,7 +15,7 @@ function RenderExcursion(props) {
             <Card>
               <Card.Title>{excursion.nombre}</Card.Title>
               <Card.Divider/>
-              <Card.Image source={require('./imagenes/40Años.png')}></Card.Image>
+              <Card.Image source={{uri: baseUrl + excursion.imagen}}></Card.Image>
               <Text style={{margin: 20}}>
                 {excursion.descripcion}
               </Text>
@@ -70,10 +69,26 @@ class DetalleExcursion extends Component {
         constructor(props) {
             super(props);
             this.state = {
-                excursiones: EXCURSIONES,
-                comentarios: COMENTARIOS,
+                excursiones: [],
+                comentarios: [],
                 favoritos: []
             };
+
+            const requestExcursiones = axios.get(baseUrl+'excursiones');
+            const requestComentarios = axios.get(baseUrl+'comentarios');
+
+            axios.all([requestExcursiones, requestComentarios])
+                .then(axios.spread((requestExcursiones, requestComentarios) => {
+                    this.setState({
+                        excursiones: requestExcursiones.data,
+                        comentarios: requestComentarios.data,
+                        favoritos: [],
+                    });
+                }))
+                .catch(error => {
+                    console.log(error);
+                });
+
         }
       
         marcarFavorito(excursionId) {
