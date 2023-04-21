@@ -3,8 +3,17 @@ import { Text, View } from 'react-native';
 import { Card, Icon } from '@rneui/themed';
 import { ListItem } from 'react-native-elements';
 import { ScrollView, FlatList } from 'react-native';
-import axios from 'axios';
 import { baseUrl } from '../comun/comun';
+import { connect } from 'react-redux';
+
+
+const mapStateToProps = state => { 
+    console.log(state.actividades);
+    return {
+        excursiones: state.excursiones, 
+        comentarios: state.comentarios   
+    }
+}
 
 function RenderExcursion(props) {
 
@@ -69,26 +78,8 @@ class DetalleExcursion extends Component {
         constructor(props) {
             super(props);
             this.state = {
-                excursiones: [],
-                comentarios: [],
                 favoritos: []
             };
-
-            const requestExcursiones = axios.get(baseUrl+'excursiones');
-            const requestComentarios = axios.get(baseUrl+'comentarios');
-
-            axios.all([requestExcursiones, requestComentarios])
-                .then(axios.spread((requestExcursiones, requestComentarios) => {
-                    this.setState({
-                        excursiones: requestExcursiones.data,
-                        comentarios: requestComentarios.data,
-                        favoritos: [],
-                    });
-                }))
-                .catch(error => {
-                    console.log(error);
-                });
-
         }
       
         marcarFavorito(excursionId) {
@@ -99,12 +90,11 @@ class DetalleExcursion extends Component {
             const {excursionId} = this.props.route.params;
             return(
                 <ScrollView>
-                    <RenderExcursion excursion={this.state.excursiones[+excursionId]} favorita={this.state.favoritos.some(el => el === excursionId)}
+                    <RenderExcursion excursion={this.props.excursiones.excursiones[+excursionId]} favorita={this.state.favoritos.some(el => el === excursionId)}
                     onPress={() => this.marcarFavorito(excursionId)} />
-                    <SeccionComentarios comentarios={this.state.comentarios.filter((comentario) => comentario.excursionId === excursionId)}/>
+                    <SeccionComentarios comentarios={this.props.comentarios.comentarios.filter((comentario) => comentario.excursionId === excursionId)}/>
                 </ScrollView>
             );
         }
 }
-
-export default DetalleExcursion;
+export default connect(mapStateToProps)(DetalleExcursion);

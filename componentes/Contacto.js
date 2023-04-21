@@ -4,10 +4,7 @@ import { Card } from '@rneui/themed';
 
 
 class Contacto extends Component {
-    constructor(props) {
-        super(props);
-    }
-  
+
     render(){
         return(
             <Card>

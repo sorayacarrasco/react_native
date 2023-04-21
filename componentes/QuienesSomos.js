@@ -4,29 +4,16 @@ import { ScrollView, FlatList } from 'react-native';
 import { ListItem, Avatar } from '@rneui/themed';
 import { Card } from '@rneui/themed';
 import { baseUrl } from '../comun/comun';
-import axios from 'axios';
+import { connect } from 'react-redux';
 
+const mapStateToProps = state => { 
+    console.log(state.actividades);
+    return {
+        actividades: state.actividades    
+    }
+}
 
 class QuienesSomos extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            actividades: ''
-        };
-
-        const request = axios.get(baseUrl+'actividades');
-
-        axios.all([request])
-            .then(axios.spread((response) => {
-                this.setState({
-                    actividades: response.data,
-                });
-            }))
-            .catch(error => {
-                console.log(error);
-            });
-
-    }
 
     render(){
         const renderActividad = ({item, index}) => {
@@ -51,7 +38,7 @@ class QuienesSomos extends Component {
                     <Card.Title>Actividades y recursos</Card.Title>
                     <Card.Divider/>
                     <FlatList scrollEnabled={false}
-                        data={this.state.actividades}
+                        data={this.props.actividades.actividades}
                         renderItem={renderActividad}
                         keyExtractor={item => item.id.toString()}
                     />
@@ -63,4 +50,4 @@ class QuienesSomos extends Component {
     }
 }
 
-export default QuienesSomos;
+export default connect(mapStateToProps)(QuienesSomos);
