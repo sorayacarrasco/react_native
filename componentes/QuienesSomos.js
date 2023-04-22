@@ -7,7 +7,6 @@ import { baseUrl } from '../comun/comun';
 import { connect } from 'react-redux';
 
 const mapStateToProps = state => { 
-    console.log(state.actividades);
     return {
         actividades: state.actividades    
     }
@@ -29,24 +28,40 @@ class QuienesSomos extends Component {
                 </ListItem> 
             );
         };
-    
-        return(
 
-            <ScrollView>
-                <Historia></Historia>
-                <Card>
-                    <Card.Title>Actividades y recursos</Card.Title>
-                    <Card.Divider/>
-                    <FlatList scrollEnabled={false}
-                        data={this.props.actividades.actividades}
-                        renderItem={renderActividad}
-                        keyExtractor={item => item.id.toString()}
-                    />
-                </Card>
-                
-            </ScrollView>
-        );
-        
+
+        if(this.props.actividades.isLoading){
+            return(
+                <ScrollView>
+                    <Historia></Historia>
+                    <IndicadorActividad></IndicadorActividad>
+                </ScrollView>
+            );
+        }
+        else if(this.props.actividades.errMess){
+            return(
+                <ScrollView>
+                    <Historia></Historia>
+                    <Text>{ this.props.actividades.errMess }</Text>
+                </ScrollView>
+            );
+        }
+        else{
+            return(
+                <ScrollView>
+                    <Historia></Historia>
+                    <Card>
+                        <Card.Title>Actividades y recursos</Card.Title>
+                        <Card.Divider/>
+                        <FlatList scrollEnabled={false}
+                            data={this.props.actividades.actividades}
+                            renderItem={renderActividad}
+                            keyExtractor={item => item.id.toString()}
+                        />
+                    </Card>
+                </ScrollView>
+            );
+        }
     }
 }
 
