@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
 import Historia from './Historia';
-import { ScrollView, FlatList } from 'react-native';
+import { ScrollView, FlatList, Text } from 'react-native';
 import { ListItem, Avatar } from '@rneui/themed';
 import { Card } from '@rneui/themed';
 import { baseUrl } from '../comun/comun';
 import { connect } from 'react-redux';
+import { IndicadorActividad } from './IndicadorActividadComponent';
+
 
 const mapStateToProps = state => { 
     return {

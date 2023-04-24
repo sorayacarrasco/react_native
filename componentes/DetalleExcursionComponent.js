@@ -1,31 +1,34 @@
-import React, { Component } from 'react';
-import { Text, View } from 'react-native';
+import React, { Component, useState } from 'react';
+import { Text, View, ScrollView, FlatList } from 'react-native';
 import { Card, Icon } from '@rneui/themed';
 import { ListItem } from 'react-native-elements';
-import { ScrollView, FlatList } from 'react-native';
 import { baseUrl } from '../comun/comun';
 import { connect } from 'react-redux';
-import { postFavorito } from '../redux/ActionCreators';
+import { postComentario, postFavorito } from '../redux/ActionCreators';
+import { colorGaztaroaOscuro } from '../comun/comun';
+import ModalFormComponent from './ModalFormComponent';
 
-
-const mapStateToProps = state => { 
+const mapStateToProps = state => {
     return {
-        excursiones: state.excursiones, 
+        excursiones: state.excursiones,
         comentarios: state.comentarios,
-        favoritos: state.favoritos   
+        favoritos: state.favoritos
     }
 }
 
 const mapDispatchToProps = dispatch => ({
-    postFavorito: (excursionId) => dispatch(postFavorito(excursionId))
-    })
+    postFavorito: (excursionId) => dispatch(postFavorito(excursionId)),
+    postComentario: (excursionId, valoracion, autor, comentario, dia) => dispatch(postComentario(excursionId, valoracion, autor, comentario, dia))
+})
 
 function RenderExcursion(props) {
 
     const excursion = props.excursion;
-    
+    const toggleModal = props.toggleModal;
+
         if (excursion != null) {
             return(
+
             <Card>
               <Card.Title>{excursion.nombre}</Card.Title>
               <Card.Divider/>
@@ -33,11 +36,23 @@ function RenderExcursion(props) {
               <Text style={{margin: 20}}>
                 {excursion.descripcion}
               </Text>
-              <Icon 
-                raised
-                reverse
-                name={ props.favorita ? 'heart' : 'heart-o'} type='font-awesome'color='#f50'onPress={() => props.favorita ? console.log('La excursión ya se encuentra entre las favoritas') : props.onPress()} 
-            />
+              <View style={{justifyContent: 'center',alignItems: 'center', flex:1, flexDirection: 'row'}}>
+                <Icon
+                    raised
+                    reverse
+                    name={ props.favorita ? 'heart' : 'heart-o'}
+                    type='font-awesome'color='#f50'
+                    onPress={() => props.favorita ? console.log('La excursión ya se encuentra entre las favoritas') : props.onPress()}
+                />
+                <Icon
+                    raised
+                    reverse
+                    name={'pencil'} type='font-awesome'color={colorGaztaroaOscuro}
+                    onPress={() => toggleModal()}
+
+                />
+              </View>
+
             </Card>
             );
         }
@@ -80,21 +95,54 @@ function SeccionComentarios(props){
 }
 
 class DetalleExcursion extends Component {
-      
-        marcarFavorito(excursionId) {
-            this.props.postFavorito(excursionId);
-        }
+    constructor(props){
+        super(props);
 
-        render(){
-            const {excursionId} = this.props.route.params;
-            return(
-                <ScrollView>
-                    <RenderExcursion excursion={this.props.excursiones.excursiones[+excursionId]} 
-                    favorita={this.props.favoritos.favoritos.some(el => el === excursionId)}
-                    onPress={() => this.marcarFavorito(excursionId)} />
-                    <SeccionComentarios comentarios={this.props.comentarios.comentarios.filter((comentario) => comentario.excursionId === excursionId)}/>
-                </ScrollView>
-            );
-        }
+    }
+
+    state = {
+        valoracion: 3,
+        autor: '',
+        comentario: '',
+        showModal:false
+    }
+
+    toggleModal = () => {
+        this.setState({showModal: !this.state.showModal});
+    }
+
+    resetForm = () => {
+        this.setState({
+            valoracion: 3,
+            autor: '',
+            comentario: '',
+            dia: '',
+            showModal: false
+        });
+        this.toggleModal();
+    }
+
+    marcarFavorito(excursionId) {
+        this.props.postFavorito(excursionId);
+    }
+
+    
+
+    render(){
+        const {excursionId} = this.props.route.params;
+        return(
+            <ScrollView>
+                <RenderExcursion excursion={this.props.excursiones.excursiones[+excursionId]}
+                favorita={this.props.favoritos.favoritos.some(el => el === excursionId)}
+                toggleModal={this.toggleModal}
+                onPress={() => this.marcarFavorito(excursionId)} />
+                <ModalFormComponent modalVisible={this.state.showModal} resetForm={this.toggleModal} excursionId={excursionId}></ModalFormComponent>
+                <SeccionComentarios comentarios={this.props.comentarios.comentarios.filter((comentario) => comentario.excursionId === excursionId)}/>
+            </ScrollView>
+        );
+    }
 }
+
+
+
 export default connect(mapStateToProps, mapDispatchToProps)(DetalleExcursion);
